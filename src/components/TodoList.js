@@ -4,30 +4,45 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { Stack } from "@mui/system";
-import { Chip } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { async } from "@firebase/util";
+import toast from "react-hot-toast";
 
-export default function () {
-  const [todos, setTodos] = React.useState([]);
-
-  const [loading, setLoading] = React.useState(true);
+export default function ({getTodosFromFirebase,loading,todos}) {
+  
 
   React.useEffect(() => {
     getTodosFromFirebase();
   }, []);
 
-  const getTodosFromFirebase = async () => {
-    console.log("Geting Todos");
+  
 
-    const todoSnapshot = await getDocs(collection(db, "todos"));
-    const todoList = todoSnapshot.docs.map((doc) => {
-      return doc.data();
+  const deleteTodoFromFirebase = async (id) => {
+    const todoRef = doc(db, "todos", id);
+    await deleteDoc(todoRef).then(() => {
+      toast("Todo Deleted Successfully");
+      getTodosFromFirebase();
     });
-    console.log(todoList);
-    setTodos(todoList);
-    setLoading(false);
+  };
+
+  const updateTodoFromFirebase = async (todo) => {
+    const todoRef = doc(db, "todos", todo.id);
+    await updateDoc(todoRef, {
+      done: !todo.done,
+    }).then(()=>{
+      toast("Todo Updated Successfully");
+      getTodosFromFirebase()
+    });
   };
 
   return (
@@ -51,10 +66,37 @@ export default function () {
                 <Stack direction="row" spacing={1}>
                   <Chip label={todo.category} color="primary" />
                   {/* <Chip label="success" color="success" /> */}
-                {todo.done? (<Chip label="Done" color="success" />): (<Chip label="Not Done" color="secondary" />)}
+                  {todo.done ? (
+                    <Chip label="Done" color="success" />
+                  ) : (
+                    <Chip label="Not Done" color="secondary" />
+                  )}
 
+                  <IconButton
+                    onClick={() => {
+                      deleteTodoFromFirebase(todo.id);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  {!todo.done ? (
+                    <button
+                      onClick={() => {
+                        updateTodoFromFirebase(todo);
+                      }}
+                    >
+                      Mark As Done
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        updateTodoFromFirebase(todo);
+                      }}
+                    >
+                      Mark As Undone
+                    </button>
+                  )}
                 </Stack>
-
               </AccordionDetails>
             </Accordion>
           );
