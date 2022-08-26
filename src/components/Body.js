@@ -37,12 +37,12 @@ export default function Body() {
   return (
     <Box sx={{ flexGrow: 1, marginTop: "40px" }}>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <Item>
             <NewTodo getTodosFromFirebase={getTodosFromFirebase} />
           </Item>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <Item>
             <TodoList
               getTodosFromFirebase={getTodosFromFirebase}
