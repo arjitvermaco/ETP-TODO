@@ -33,7 +33,7 @@ export default function App() {
         <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
           {loading ? 'Fetching News' : newsData.map((news)=>{
               return(
-                <NewsCard news={news}/>
+                <NewsCard news={news} key={news.url}/>
               )
           })}​
         </div>

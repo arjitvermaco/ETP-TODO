@@ -13,7 +13,7 @@ export default function NewsCard({news}) {
     <div className="flex-1 bg-white p-6 flex flex-col justify-between">
       <div className="flex-1">
        
-        <a href="#" className="block mt-2">
+        <a href={news.url} target="_blank" className="block mt-2">
           <p className="text-xl font-semibold text-gray-900">
             {news.title}
           </p>
