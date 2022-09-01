@@ -1,22 +1,24 @@
-import logo from "./logo.svg";
-import "./App.css";
-import A from "./A";
-import B from "./B";
-import C from "./C";
 import { useContext } from "react";
-import AppContext from './context/AppContext'
+import AppContext from "./context/AppContext";
+import A from './A';
 function App() {
+  const context = useContext(AppContext);
 
-  const state = useContext(AppContext);
-  console.log("State",state);
+  console.log(context);
 
   return (
     <>
-      <A>
-      
-      </A>
-      <B/>
-        <C/>
+      {context.name}
+
+      <button
+        onClick={() => {
+          context.setName("ETP Batch2");
+        }}
+      >
+        Change Name
+      </button>
+
+      <A/>
     </>
   );
 }
